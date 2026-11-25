@@ -17,6 +17,7 @@ export const login = async (req, res) => {
     await db.query('INSERT INTO audit_logs (user_id, action, details) VALUES ($1,$2,$3)', [user.id, 'LOGIN', `User ${user.username} logged in`]);
     res.json({ token, user: payload });
   } catch (e) {
+    console.error('Login failed:', e);
     res.status(500).json({ message: 'Login failed.' });
   }
 };

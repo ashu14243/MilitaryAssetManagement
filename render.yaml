@@ -6,9 +6,8 @@ services:
     plan: free
     rootDir: backend
     buildCommand: npm ci
-    startCommand: npm start
+    startCommand: npm run seed:demo-if-empty && npm start
     healthCheckPath: /health
-    initialDeployHook: npm run seed
     envVars:
       - key: DATABASE_URL
         fromDatabase:
