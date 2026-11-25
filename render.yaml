@@ -1,0 +1,31 @@
+services:
+  - type: web
+    name: military-asset-api
+    runtime: node
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: npm ci
+    startCommand: npm start
+    healthCheckPath: /health
+    initialDeployHook: npm run seed
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: military-assets-db
+          property: connectionString
+      - key: DATABASE_SSL
+        value: "true"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: CORS_ORIGIN
+        sync: false
+
+databases:
+  - name: military-assets-db
+    databaseName: military_assets
+    user: military_assets
+    region: singapore
+    plan: free

@@ -43,6 +43,17 @@ Note: `dump.sql` contains bcrypt hashes of the **sample** passwords below; do no
 * **RBAC is enforced on the server** (`authorizeRoles`, `enforceBaseScope`); the UI only mirrors it. Base Commanders are pinned to their own base for reads and writes.
 * Deviations from the reference snippets (deliberate): the reference transfer inserted without a stock check, and its dashboard query referenced columns that do not match its schema and omitted opening/closing/assigned/expended.
 
-## Deployment
-* Backend → Render/Railway: set `DATABASE_URL`, `JWT_SECRET`, `CORS_ORIGIN` (your frontend URL), `DATABASE_SSL=true` if required; start command `npm start`; run `npm run seed` once.
-* Frontend → Vercel/Netlify: set `VITE_API_BASE_URL` to the backend URL; build `npm run build`, output `dist`; add an SPA rewrite of all paths to `/index.html`.
+## Deployment (temporary demo)
+
+The repository includes a Render Blueprint (`render.yaml`) for the Express API and PostgreSQL database, and Vercel configuration (`frontend/vercel.json`) for the React single-page app.
+
+**Free-tier warning:** Render's free web service can sleep when idle, and its free PostgreSQL database expires after 30 days. This setup is for a short evaluation/demo only; do not store real or sensitive asset data. The seed creates public, documented demo accounts, so do not use these credentials for production.
+
+1. Push the repository to GitHub, then create a Vercel project from it. Set the **Root Directory** to `frontend`; use the detected Vite framework, build command `npm run build`, and output directory `dist`.
+2. Deploy the frontend once to get its Vercel production URL. In Vercel **Settings → Environment Variables**, set `VITE_API_BASE_URL` to the Render API base URL after creating the API in step 3. Use the base URL only, e.g. `https://your-api.onrender.com` (no trailing slash and no `/api`).
+3. In Render, create a **Blueprint** from the GitHub repository and select the `render.yaml` at the repository root. Confirm the free plans. When prompted for `CORS_ORIGIN`, enter the exact Vercel production origin, e.g. `https://your-app.vercel.app` (no path or trailing slash).
+4. The Blueprint connects the API to PostgreSQL using Render's internal connection string, generates `JWT_SECRET`, enables database TLS, and seeds sample data once after the API's first successful deploy. Do not run `npm run seed` again: it drops and recreates the tables.
+5. Copy the deployed API's base URL from Render into Vercel's `VITE_API_BASE_URL`, save it for the Production environment, and redeploy the frontend. The backend already receives `DATABASE_URL`, `JWT_SECRET`, `JWT_EXPIRES_IN`, `DATABASE_SSL`, and `CORS_ORIGIN` through Render; do not commit real values or put backend secrets in `VITE_*` variables.
+6. Verify `https://your-api.onrender.com/health` returns `{"status":"ok"}`, then open the Vercel URL and sign in with one of the sample accounts in this README.
+
+If you change the Vercel production domain, update Render's `CORS_ORIGIN` to match it. For a production deployment, use paid persistent hosting, remove the demo seed hook, and create private accounts with unique credentials before adding real data.
