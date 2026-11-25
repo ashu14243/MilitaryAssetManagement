@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+body { @apply bg-slate-100 text-slate-800; }
+.input { @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500; }
+.btn { @apply rounded-md bg-slate-800 px-4 py-2 text-sm font-semibold text-white hover:bg-slate-700 disabled:opacity-50; }
+.card { @apply rounded-lg bg-white p-5 shadow-md; }
+th { @apply bg-slate-50 px-3 py-2 text-left text-xs font-semibold uppercase text-slate-500; }
+td { @apply border-t border-slate-100 px-3 py-2 text-sm; }
